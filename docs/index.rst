@@ -4,11 +4,11 @@
 
 .. |exprtk| raw:: html
 
-   <a href"=http://www.partow.net/programming/exprtk/index.html">ExprTk</a>
+   <a href="http://www.partow.net/programming/exprtk/index.html">ExprTk</a>
 
 .. |fledge-south-expression| raw:: html
 
-   <a href="../../fledge-south-expression/index.html">fledge-south-expression</a>
+   <a href="../fledge-south-expression/index.html">fledge-south-expression</a>
 
 .. |fledge-filter-threshold| raw:: html
 
