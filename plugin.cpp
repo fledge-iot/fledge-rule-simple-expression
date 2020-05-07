@@ -18,7 +18,7 @@
 #include "version.h"
 #include "simple_expression.h"
 
-#define RULE_NAME "SimpleExpression"
+#define RULE_NAME "Simple-Expression"
 #define RULE_DESCRIPTION  "Generate a notification based on the evaluation of a user provided expression"
 
 /**
