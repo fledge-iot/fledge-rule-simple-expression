@@ -2,7 +2,7 @@
 #
 plugin_name=simple-expression
 plugin_type=rule
-plugin_install_dirname=SimpleExpression
+plugin_install_dirname=Simple-Expression
 
 # Now build up the runtime requirements list. This has 3 components
 #   1. Generic packages we depend on in all architectures and package managers
