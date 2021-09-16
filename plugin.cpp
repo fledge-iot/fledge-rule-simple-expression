@@ -46,7 +46,7 @@
  */
 
 
-const char * defaultConfiguration = QUOTE(
+static const char * defaultConfiguration = QUOTE(
 {
 	"plugin" : {
 		"description" : RULE_DESCRIPTION,
