@@ -31,7 +31,7 @@ timestamps {
                 stage("Run Tests"){
                     echo "Executing tests..."
                     sh '''
-                        export FLEDGE_ROOT=$HOME/fledge
+                        export FLEDGE_ROOT=$HOME/fledge && export NOTIFICATION_SERVICE_INCLUDE_DIRS=$HOME/fledge-service-notification/C/services/common/include
                         cd tests && cmake . && make && ./RunTests --gtest_output=xml:test_output.xml
                     '''
                     echo "Done."
