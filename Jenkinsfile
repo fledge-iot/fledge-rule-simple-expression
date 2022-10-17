@@ -16,9 +16,12 @@ timestamps {
                 stage("Prerequisites"){
                     // Change to corresponding CORE_BRANCH as required
                     // e.g. FOGL-xxxx, main etc.
+                    // Change NOTIFICATION_SERVICE_BRANCH to required branch of fledge-service-notification repository
+                    // e.g. FOGL-xxxx, main etc.
                     sh '''
                         CORE_BRANCH='develop'
-                        ${HOME}/buildFledge ${CORE_BRANCH} ${WORKSPACE}
+                        NOTIFICATION_SERVICE_BRANCH='develop'
+                        ${HOME}/buildFledge ${CORE_BRANCH} ${WORKSPACE} ${NOTIFICATION_SERVICE_BRANCH}
                     '''
                 }
             } catch (e) {
