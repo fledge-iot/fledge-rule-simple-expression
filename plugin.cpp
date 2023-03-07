@@ -54,13 +54,6 @@ static const char * defaultConfiguration = QUOTE(
 		"default" :  RULE_NAME,
 		"readonly" : "true"
 	},
-	"description" : {
-		"description" : "Generate a notification using an expression evaluation.",
-		"type" : "string",
-		"default" : "Generate a notification using an expression evaluation.",
-		"displayName" : "Rule",
-		"readonly" : "true"
-	},
 	"asset" : {
 		"description" : "The asset name for which notifications will be generated.",
 		"type" : "string",
