@@ -19,8 +19,8 @@ timestamps {
                     // Change NOTIFICATION_SERVICE_BRANCH to required branch of fledge-service-notification repository
                     // e.g. FOGL-xxxx, main etc.
                     sh '''
-                        CORE_BRANCH='develop'
-                        NOTIFICATION_SERVICE_BRANCH='develop'
+                        CORE_BRANCH='2.2.0RC'
+                        NOTIFICATION_SERVICE_BRANCH='2.2.0RC'
                         ${HOME}/buildFledge ${CORE_BRANCH} ${WORKSPACE} ${NOTIFICATION_SERVICE_BRANCH}
                     '''
                 }
@@ -34,7 +34,7 @@ timestamps {
                 stage("Run Tests"){
                     echo "Executing tests..."
                     sh '''
-                        export FLEDGE_ROOT=$HOME/fledge && export NOTIFICATION_SERVICE_INCLUDE_DIRS=$HOME/fledge-service-notification/C/services/common/include
+                        export FLEDGE_ROOT=$HOME/fledge && export NOTIFICATION_SERVICE_INCLUDE_DIRS=$HOME/fledge-service-notification/C/services/notification/include
                         cd tests && cmake . && make && ./RunTests --gtest_output=xml:test_output.xml
                     '''
                     echo "Done."
