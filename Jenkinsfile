@@ -19,8 +19,8 @@ timestamps {
                     // Change NOTIFICATION_SERVICE_BRANCH to required branch of fledge-service-notification repository
                     // e.g. FOGL-xxxx, main etc.
                     sh '''
-                        CORE_BRANCH='develop'
-                        NOTIFICATION_SERVICE_BRANCH='develop'
+                        CORE_BRANCH='2.4.0RC'
+                        NOTIFICATION_SERVICE_BRANCH='2.4.0RC'
                         ${HOME}/buildFledge ${CORE_BRANCH} ${WORKSPACE} ${NOTIFICATION_SERVICE_BRANCH}
                     '''
                 }
