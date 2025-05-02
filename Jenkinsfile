@@ -17,9 +17,12 @@ timestamps {
                 stage("Prerequisites"){
                     // Change to corresponding CORE_BRANCH as required
                     // e.g. FOGL-xxxx, main etc.
+                    // Change NOTIFICATION_SERVICE_BRANCH to required branch of fledge-service-notification repository
+                    // e.g. FOGL-xxxx, main etc.
                     sh '''
                         CORE_BRANCH='develop'
-                        ${HOME}/buildFledge ${CORE_BRANCH} ${WORKSPACE}
+                        NOTIFICATION_SERVICE_BRANCH='develop'
+                        ${HOME}/buildFledge ${CORE_BRANCH} ${WORKSPACE} ${NOTIFICATION_SERVICE_BRANCH}
                     '''
                 }
             } catch (e) {
@@ -33,6 +36,7 @@ timestamps {
                     echo "Executing tests..."
                     sh '''
                         export FLEDGE_ROOT=$HOME/fledge
+                        export NOTIFICATION_SERVICE_INCLUDE_DIRS=$HOME/fledge-service-notification/C/services/notification/include
                         cd tests && cmake . && make -j$(nproc) && \
                         valgrind -v --leak-check=full ./RunTests --gtest_output=xml:test_output.xml 2>&1 | tee valgrind_report.log
                     '''
