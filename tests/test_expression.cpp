@@ -17,6 +17,7 @@ extern "C" {
 	void plugin_ingest(void *handle,
                    READINGSET *readingSet);
 	PLUGIN_HANDLE plugin_init(ConfigCategory& config);
+	void plugin_shutdown(PLUGIN_HANDLE handle);
 	bool plugin_eval(PLUGIN_HANDLE handle,
                  const string& assetValues);
 };
@@ -36,6 +37,7 @@ TEST(EXPRESSION, NoTrigger)
 
 	bool result = plugin_eval(handle, values);
 	ASSERT_EQ(result, false);
+	plugin_shutdown(handle);
 }
 
 TEST(EXPRESSION, Trigger)
@@ -53,6 +55,7 @@ TEST(EXPRESSION, Trigger)
 
 	bool result = plugin_eval(handle, values);
 	ASSERT_EQ(result, true);
+	plugin_shutdown(handle);
 }
 
 TEST(EXPRESSION, FloatNoTrigger)
@@ -70,6 +73,7 @@ TEST(EXPRESSION, FloatNoTrigger)
 
 	bool result = plugin_eval(handle, values);
 	ASSERT_EQ(result, false);
+	plugin_shutdown(handle);
 }
 
 TEST(EXPRESSION, FloatTrigger)
@@ -87,6 +91,7 @@ TEST(EXPRESSION, FloatTrigger)
 
 	bool result = plugin_eval(handle, values);
 	ASSERT_EQ(result, true);
+	plugin_shutdown(handle);
 }
 
 TEST(EXPRESSION, DifferentAsset)
@@ -104,4 +109,5 @@ TEST(EXPRESSION, DifferentAsset)
 
 	bool result = plugin_eval(handle, values);
 	ASSERT_EQ(result, false);
+	plugin_shutdown(handle);
 }
