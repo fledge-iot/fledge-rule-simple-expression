@@ -1,5 +1,6 @@
 timestamps {
-    node("ubuntu18-agent") {
+    node("ubuntu-agent") {
+        def IS_MEMORY_LEAKAGE = 'FALSE'
         catchError {
             checkout scm
             dir_exists = sh (
@@ -19,8 +20,8 @@ timestamps {
                     // Change NOTIFICATION_SERVICE_BRANCH to required branch of fledge-service-notification repository
                     // e.g. FOGL-xxxx, main etc.
                     sh '''
-                        CORE_BRANCH='3.0.0RC'
-                        NOTIFICATION_SERVICE_BRANCH='3.0.0RC'
+                        CORE_BRANCH='3.1.0RC'
+                        NOTIFICATION_SERVICE_BRANCH='3.1.0RC'
                         ${HOME}/buildFledge ${CORE_BRANCH} ${WORKSPACE} ${NOTIFICATION_SERVICE_BRANCH}
                     '''
                 }
@@ -28,19 +29,36 @@ timestamps {
                 currentBuild.result = 'FAILURE'
                 echo "Failed to build Fledge; required to run the tests!"
                 return
-            }   
+            }
 
-            try { 
-                stage("Run Tests"){
+            try {
+                stage("Run Tests") {
                     echo "Executing tests..."
                     sh '''
-                        export FLEDGE_ROOT=$HOME/fledge && export NOTIFICATION_SERVICE_INCLUDE_DIRS=$HOME/fledge-service-notification/C/services/notification/include
-                        cd tests && cmake . && make && ./RunTests --gtest_output=xml:test_output.xml
+                        export FLEDGE_ROOT=$HOME/fledge
+                        export NOTIFICATION_SERVICE_INCLUDE_DIRS=$HOME/fledge-service-notification/C/services/notification/include
+                        cd tests && cmake . && make -j$(nproc) && \
+                        valgrind -v --leak-check=full ./RunTests --gtest_output=xml:test_output.xml 2>&1 | tee valgrind_report.log
                     '''
+                    def leakDetected = sh(
+                        script: "grep -q '^==[0-9]*==    definitely lost: [1-9][0-9,]* bytes' tests/valgrind_report.log && echo Y || echo N",
+                        returnStdout: true
+                    ).trim()
+
+                    if (leakDetected == 'Y') {
+                        IS_MEMORY_LEAKAGE = 'TRUE'
+                        echo "❗ Memory leaks detected!"
+                        sh '''
+                            grep -A 4 '^==[0-9]*== HEAP SUMMARY:' tests/valgrind_report.log || true
+                            grep -A 8 '^==[0-9]*== LEAK SUMMARY:' tests/valgrind_report.log || true
+                        '''
+                        currentBuild.result = 'FAILURE'
+                    } else {
+                        echo "✅ No memory leaks detected."
+                    }
                     echo "Done."
                 }
             } catch (e) {
-                result = "TESTS FAILED" 
                 currentBuild.result = 'FAILURE'
                 echo "Tests failed!"
             }
@@ -48,9 +66,11 @@ timestamps {
             try {
                 stage("Publish Test Report"){
                     junit "tests/test_output.xml"
+                    if (IS_MEMORY_LEAKAGE == 'TRUE') {
+                        archiveArtifacts artifacts: 'tests/valgrind_report.log'
+                    }
                 }
             } catch (e) {
-                result = "TEST REPORT GENERATION FAILED"
                 currentBuild.result = 'FAILURE'
                 echo "Failed to generate test reports!"
             }
